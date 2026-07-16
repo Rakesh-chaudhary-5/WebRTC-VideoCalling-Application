@@ -20,7 +20,7 @@ const RoomPage = () => {
 console.log("isHost:", isHost);
 
 const navigate = useNavigate();
-  
+  console.log("");
   // const [isHost, setIsHost] = useState(false);
 
   const [cameraOn, setCameraOn] = useState(false); ////////////
