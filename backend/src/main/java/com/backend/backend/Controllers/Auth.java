@@ -54,6 +54,7 @@ public class Auth {
       userRepo.save(user);
 
       SimpleMailMessage message = new SimpleMailMessage();
+      message.setFrom("rakesh9106985213@gmail.com");
       message.setTo(email);
       message.setSubject("Your Email verification OTP");
       message.setText("Your OTP is: " + otp);
