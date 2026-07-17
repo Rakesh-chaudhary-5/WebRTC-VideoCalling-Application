@@ -13,7 +13,7 @@ export default function Register() {
     e.preventDefault();
 
     try {
-     const res = await axios.post("http://localhost:8080/register",
+     const res = await axios.post("https://visiontalk7.onrender.com/register",
       {
         username,
         email

@@ -17,7 +17,7 @@ export default function Login() {
     try {
 
     const res =  await axios.get(
-        `http://localhost:8080/generateOTP?email=${email}`
+        `https://visiontalk7.onrender.com/generateOTP?email=${email}`
       );
 
       console.log(res.data);
@@ -38,7 +38,7 @@ export default function Login() {
     try {
 
       const res = await axios.post(
-        "http://localhost:8080/verifyOtp",
+        "https://visiontalk7.onrender.com/verifyOtp",
         {
           email,
           otp,

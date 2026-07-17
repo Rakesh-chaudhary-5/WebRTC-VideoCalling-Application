@@ -15,7 +15,7 @@ export const UserProvider = (props) => {
     const fetchUser = async () => {
         try {
             const res = await axios.get(
-                "http://localhost:8080/loggedInUser",
+                "https://visiontalk7.onrender.com/loggedInUser",
                 { withCredentials: true }
             );
 
