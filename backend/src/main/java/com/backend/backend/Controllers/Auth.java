@@ -12,7 +12,12 @@ import java.time.LocalDateTime;
 import java.util.Random;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:5173",    allowCredentials = "true"
+@CrossOrigin(
+        origins = {
+                "http://localhost:5173",
+                "https://visiontalk7.netlify.app"
+        },
+        allowCredentials = "true"
 )
 public class Auth {
 
