@@ -58,9 +58,15 @@ public class Auth {
       message.setSubject("Your Email verification OTP");
       message.setText("Your OTP is: " + otp);
 
-      mailSender.send(message);
+      try {
+          mailSender.send(message);
+          return "OTP Sent Successfully";
+      } catch (Exception e) {
+          e.printStackTrace();
+          return "Mail Error: " + e.getMessage();
+      }
 
-      return "OTP Sent Successfully";
+//      return "OTP Sent Successfully";
 
   }
   @PostMapping("/verifyOtp")
