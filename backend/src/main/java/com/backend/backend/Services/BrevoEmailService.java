@@ -22,7 +22,8 @@ public class BrevoEmailService {
     private String senderName;
 
     public void sendOtp(String toEmail, String otp) throws IOException, InterruptedException {
-
+        System.out.println("===== USING BREVO API =====");
+        System.out.println("API Key starts with: " + apiKey.substring(0, 8));
         String json = """
                 {
                   "sender": {
