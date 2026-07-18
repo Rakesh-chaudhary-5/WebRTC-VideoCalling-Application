@@ -8,6 +8,8 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.web.bind.annotation.*;
 
+import com.backend.backend.Services.BrevoEmailService;
+
 import java.time.LocalDateTime;
 import java.util.Random;
 
@@ -24,8 +26,11 @@ public class Auth {
     @Autowired
     private UserRepo userRepo;
 
+//    @Autowired
+//    private JavaMailSender mailSender;
+
     @Autowired
-    private JavaMailSender mailSender;
+    private BrevoEmailService brevoEmailService;
 
   @PostMapping("/register")
   public String register(@RequestBody User userData) {
@@ -53,19 +58,31 @@ public class Auth {
       user.setOtpExpiry(LocalDateTime.now().plusMinutes(5));
       userRepo.save(user);
 
-      SimpleMailMessage message = new SimpleMailMessage();
-      message.setFrom("rakesh9106985213@gmail.com");
-      message.setTo(email);
-      message.setSubject("Your Email verification OTP");
-      message.setText("Your OTP is: " + otp);
-
       try {
-          mailSender.send(message);
+
+          brevoEmailService.sendOtp(email, otp);
+
           return "OTP Sent Successfully";
+
       } catch (Exception e) {
+
           e.printStackTrace();
-          return "Mail Error: " + e.getMessage();
+
+          return "Mail Error : " + e.getMessage();
       }
+//      SimpleMailMessage message = new SimpleMailMessage();
+//      message.setFrom("rakesh9106985213@gmail.com");
+//      message.setTo(email);
+//      message.setSubject("Your Email verification OTP");
+//      message.setText("Your OTP is: " + otp);
+
+//      try {
+//          mailSender.send(message);
+//          return "OTP Sent Successfully";
+//      } catch (Exception e) {
+//          e.printStackTrace();
+//          return "Mail Error: " + e.getMessage();
+//      }
 
 //      return "OTP Sent Successfully";
 
