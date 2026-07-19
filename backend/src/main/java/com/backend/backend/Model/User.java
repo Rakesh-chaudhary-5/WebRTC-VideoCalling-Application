@@ -15,8 +15,9 @@ public class User {
     private String username;
     @Column(unique = true)
     private String email;
-    private String otp;
-    private LocalDateTime otpExpiry;
-    private Boolean verified = false;
+    private String password;
+//    private String otp;
+//    private LocalDateTime otpExpiry;
+//    private Boolean verified = false;
 
 }
