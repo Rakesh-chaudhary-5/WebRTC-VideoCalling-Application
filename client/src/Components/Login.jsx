@@ -8,7 +8,8 @@ export default function Login() {
   const {change,setChange} = useContext(UserContext);
   const [userData, setUserData] = useState(
     {
-      userData
+      email: "",
+      password: "",
     }
   );
   const [otp, setOtp] = useState("");
@@ -42,10 +43,7 @@ export default function Login() {
     try {
 
       const res = await axios.post(
-        "https://visiontalk7.onrender.com/login",
-        {
-          userData
-        },
+        "https://visiontalk7.onrender.com/login",userData,
         {
           withCredentials: true,
         }
