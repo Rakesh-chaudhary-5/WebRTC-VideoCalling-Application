@@ -125,13 +125,33 @@ const handleIncommingCall = useCallback(
   [socket, myStream]
 );
 
+  // const sendStreams = useCallback(() => {
+  //   for (const track of myStream.getTracks()) {
+  //     console.log(myStream.getVideoTracks()[0]);
+  //     peer.peer.addTrack(track, myStream);
+  //   }
+  //   console.log("SENDING TRACKS", myStream.getTracks().length);
+  // }, [myStream]);
+
   const sendStreams = useCallback(() => {
-    for (const track of myStream.getTracks()) {
-      console.log(myStream.getVideoTracks()[0]);
-      peer.peer.addTrack(track, myStream);
-    }
-    console.log("SENDING TRACKS", myStream.getTracks().length);
-  }, [myStream]);
+
+    if (!myStream) return;
+
+    const senders = peer.peer.getSenders();
+
+    myStream.getTracks().forEach(track => {
+
+        const alreadyExists = senders.some(sender =>
+            sender.track === track
+        );
+
+        if(!alreadyExists){
+            peer.peer.addTrack(track,myStream);
+        }
+
+    });
+
+},[myStream]);
 
   const handleCallAccepted = useCallback(
     ({ from, ans }) => {
@@ -254,15 +274,15 @@ const handleHostInfo = useCallback(({ username, id }) => {
   setRemoteSocketId(id);
 }, []);
 
-useEffect(() => {
-  console.log("REGISTERING room:host");
+// useEffect(() => {
+//   console.log("REGISTERING room:host");
 
-  socket.on("room:host", handleHostInfo);
+//   socket.on("room:host", handleHostInfo);
 
-  return () => {
-    socket.off("room:host", handleHostInfo);
-  };
-}, [socket, handleHostInfo]);
+//   return () => {
+//     socket.off("room:host", handleHostInfo);
+//   };
+// }, [socket, handleHostInfo]);
 
 useEffect(() => {
   if (room) {
