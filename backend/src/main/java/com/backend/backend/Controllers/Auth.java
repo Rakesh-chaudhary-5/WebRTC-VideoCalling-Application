@@ -9,7 +9,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
-import com.backend.backend.Services.BrevoEmailService;
+//import com.backend.backend.Services.BrevoEmailService;
 
 import java.time.LocalDateTime;
 import java.util.Random;
@@ -32,8 +32,8 @@ public class Auth {
 //    @Autowired
 //    private JavaMailSender mailSender;
 
-    @Autowired
-    private BrevoEmailService brevoEmailService;
+//    @Autowired
+//    private BrevoEmailService brevoEmailService;
 
     @PostMapping("/register")
     public String register(@RequestBody User userData) {
