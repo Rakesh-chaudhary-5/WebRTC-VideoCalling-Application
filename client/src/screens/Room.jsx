@@ -111,16 +111,30 @@ const handleIncommingCall = useCallback(
     }
 
     // JOINER SENDS STREAM TOO
-    stream.getTracks().forEach((track) => {
-      peer.peer.addTrack(track, stream);
-    });
+    // stream.getTracks().forEach((track) => {
+    //   peer.peer.addTrack(track, stream);
+    // });
 
+    // const ans = await peer.getAnswer(offer);
+
+    // socket.emit("call:accepted", {
+    //   to: from,
+    //   ans,
+    // });
     const ans = await peer.getAnswer(offer);
 
-    socket.emit("call:accepted", {
-      to: from,
-      ans,
-    });
+const senders = peer.peer.getSenders();
+
+stream.getTracks().forEach((track) => {
+  if (!senders.find(sender => sender.track === track)) {
+    peer.peer.addTrack(track, stream);
+  }
+});
+
+socket.emit("call:accepted", {
+  to: from,
+  ans,
+});
   },
   [socket, myStream]
 );
@@ -161,18 +175,59 @@ const handleIncommingCall = useCallback(
   //   },
   //   [sendStreams]
   // );
-  const handleCallAccepted = useCallback(({ ans }) => {
+//   const handleCallAccepted = useCallback(({ ans }) => {
+//     console.log("ANSWER RECEIVED:", ans);
+
+//     peer.setLocalDescription(ans);
+
+//     sendStreams();
+// }, [sendStreams]);
+
+const handleCallAccepted = useCallback(async ({ ans }) => {
+
     console.log("ANSWER RECEIVED:", ans);
 
-    peer.setLocalDescription(ans);
+    await peer.setLocalDescription(ans);
+
+    console.log("Call Accepted!");
 
     sendStreams();
+
 }, [sendStreams]);
 
-  const handleNegoNeeded = useCallback(async () => {
-    const offer = await peer.getOffer();
-    socket.emit("peer:nego:needed", { offer, to: remoteSocketId });
-  }, [remoteSocketId, socket]);
+  // const handleNegoNeeded = useCallback(async () => {
+  //   const offer = await peer.getOffer();
+  //   socket.emit("peer:nego:needed", { offer, to: remoteSocketId });
+  // }, [remoteSocketId, socket]);
+
+  const makingOffer = useRef(false);
+
+const handleNegoNeeded = useCallback(async () => {
+
+    if (makingOffer.current) return;
+
+    if (!remoteSocketId) return;
+
+    makingOffer.current = true;
+
+    try {
+
+        console.log("NEGOTIATION START");
+
+        const offer = await peer.getOffer();
+
+        socket.emit("peer:nego:needed", {
+            offer,
+            to: remoteSocketId,
+        });
+
+    } finally {
+
+        makingOffer.current = false;
+
+    }
+
+}, [remoteSocketId, socket]);
 
   useEffect(() => {
     peer.peer.addEventListener("negotiationneeded", handleNegoNeeded);
@@ -315,6 +370,23 @@ const handleCallRejected = useCallback(() => {
 
   navigate("/");
 }, [navigate]);
+
+const handleTrack = useCallback((ev) => {
+
+    console.log("GOT TRACKS!!");
+
+    setRemoteStream(ev.streams[0]);
+
+}, []);
+useEffect(() => {
+
+    peer.peer.addEventListener("track", handleTrack);
+
+    return () => {
+        peer.peer.removeEventListener("track", handleTrack);
+    };
+
+}, [handleTrack]);
 ///////////////////////////////////////////////////////////////////////
 return (
    
