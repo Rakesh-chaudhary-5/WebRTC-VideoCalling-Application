@@ -6,23 +6,40 @@ export default function Register() {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
+  const [password, setPassword] = useState("");
+const [confirmPassword, setConfirmPassword] = useState("");
 
   
 
   const handleRegister = async (e) => {
     e.preventDefault();
 
+    if (password !== confirmPassword) {
+  setMessage("Passwords do not match");
+  return;
+}
+
+if (password.length < 6) {
+  setMessage("Password must be at least 6 characters");
+  return;
+}
+
     try {
      const res = await axios.post("https://visiontalk7.onrender.com/register",
       {
         username,
-        email
+        email,
+        password
       },
       {withCredentials: true}
     );
     if(res.data == "registration successful"){
-      setUsername("");
-      setEmail("");
+      if (res.data === "registration successful") {
+        setUsername("");
+        setEmail("");
+        setPassword("");
+        setConfirmPassword("");
+}
     }
       setMessage(res.data);
       
@@ -111,6 +128,55 @@ export default function Register() {
                 "
               />
             </div>
+            <div>
+  <label className="block text-slate-300 mb-2">
+    Password
+  </label>
+
+  <input
+    type="password"
+    placeholder="Enter password"
+    value={password}
+    onChange={(e) => setPassword(e.target.value)}
+    className="
+      w-full
+      bg-slate-800
+      border
+      border-slate-700
+      text-white
+      rounded-xl
+      px-4
+      py-3
+      focus:outline-none
+      focus:border-indigo-500
+    "
+  />
+</div>
+
+<div>
+  <label className="block text-slate-300 mb-2">
+    Confirm Password
+  </label>
+
+  <input
+    type="password"
+    placeholder="Confirm password"
+    value={confirmPassword}
+    onChange={(e) => setConfirmPassword(e.target.value)}
+    className="
+      w-full
+      bg-slate-800
+      border
+      border-slate-700
+      text-white
+      rounded-xl
+      px-4
+      py-3
+      focus:outline-none
+      focus:border-indigo-500
+    "
+  />
+</div>
 
             <button
               type="submit"
