@@ -153,14 +153,21 @@ const handleIncommingCall = useCallback(
 
 },[myStream]);
 
-  const handleCallAccepted = useCallback(
-    ({ from, ans }) => {
-      peer.setLocalDescription(ans);
-      console.log("Call Accepted!");
-      sendStreams();
-    },
-    [sendStreams]
-  );
+  // const handleCallAccepted = useCallback(
+  //   ({ from, ans }) => {
+  //     peer.setLocalDescription(ans);
+  //     console.log("Call Accepted!");
+  //     sendStreams();
+  //   },
+  //   [sendStreams]
+  // );
+  const handleCallAccepted = useCallback(({ ans }) => {
+    console.log("ANSWER RECEIVED:", ans);
+
+    peer.setLocalDescription(ans);
+
+    sendStreams();
+}, [sendStreams]);
 
   const handleNegoNeeded = useCallback(async () => {
     const offer = await peer.getOffer();

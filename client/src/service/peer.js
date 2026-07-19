@@ -75,31 +75,40 @@ class PeerService {
   }
 
   // Joiner receives offer and creates answer
+  // async getAnswer(offer) {
+
+  //   console.log(
+  //     "Before setRemoteDescription:",
+  //     this.peer.signalingState
+  //   );
+
+  //   if (this.peer.signalingState !== "stable") {
+  //     console.warn("Ignoring duplicate offer");
+  //     return;
+  //   }
+
+  //   await this.peer.setRemoteDescription(offer);
+
+  //   const answer = await this.peer.createAnswer();
+
+  //   await this.peer.setLocalDescription(answer);
+
+  //   console.log(
+  //     "Answer Created | State:",
+  //     this.peer.signalingState
+  //   );
+
+  //   return answer;
+  // }
   async getAnswer(offer) {
-
-    console.log(
-      "Before setRemoteDescription:",
-      this.peer.signalingState
-    );
-
-    if (this.peer.signalingState !== "stable") {
-      console.warn("Ignoring duplicate offer");
-      return;
-    }
-
     await this.peer.setRemoteDescription(offer);
 
     const answer = await this.peer.createAnswer();
 
     await this.peer.setLocalDescription(answer);
 
-    console.log(
-      "Answer Created | State:",
-      this.peer.signalingState
-    );
-
     return answer;
-  }
+}
 
   // Host receives answer
   async setLocalDescription(answer) {
