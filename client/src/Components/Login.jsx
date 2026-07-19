@@ -6,42 +6,45 @@ import { UserContext } from "../context/userProvider";
 export default function Login() {
 
   const {change,setChange} = useContext(UserContext);
-  const [email, setEmail] = useState("");
+  const [userData, setUserData] = useState(
+    {
+      userData
+    }
+  );
   const [otp, setOtp] = useState("");
   const [otpSent, setOtpSent] = useState(false);
   const [message, setMessage] = useState("");
   const navigate = useNavigate();
   
 
-  const sendOtp = async () => {
-    try {
+  // const sendOtp = async () => {
+  //   try {
 
-    const res =  await axios.get(
-        `https://visiontalk7.onrender.com/generateOTP?email=${email}`
-      );
+  //   const res =  await axios.get(
+  //       `https://visiontalk7.onrender.com/generateOTP?email=${email}`
+  //     );
 
-      console.log(res.data);
-      if(res.data == "OTP Sent Successfully"){
-         setOtpSent(true);
-      }
-      setMessage(res.data)
+  //     console.log(res.data);
+  //     if(res.data == "OTP Sent Successfully"){
+  //        setOtpSent(true);
+  //     }
+  //     setMessage(res.data)
 
-    } catch (error) {
+  //   } catch (error) {
 
-      console.log(error);
-      setMessage("Failed To Send OTP");
-    }
-  };
+  //     console.log(error);
+  //     setMessage("Failed To Send OTP");
+  //   }
+  // };
 
 
-  const verifyOtp = async () => {
+  const login = async () => {
     try {
 
       const res = await axios.post(
-        "https://visiontalk7.onrender.com/verifyOtp",
+        "https://visiontalk7.onrender.com/login",
         {
-          email,
-          otp,
+          userData
         },
         {
           withCredentials: true,
@@ -49,10 +52,13 @@ export default function Login() {
       );
       console.log(res.data);
       setMessage(res.data)
-      if(res.data == "OTP Verified Successfully"){
+      if(res.data == "Login Successful"){
         setChange(!change);
-        setOtp("");
-        setEmail("");
+
+          setUserData({
+            email: "",
+            password: "",
+      });
 
         navigate("/");
       }
@@ -61,7 +67,7 @@ export default function Login() {
     } catch (error) {
 
       console.log(error);
-      setMessage("Invalid OTP");
+      setMessage("Invalid email or password");
     }
   };
 
@@ -79,11 +85,11 @@ export default function Login() {
           </h1>
 
           <p className="text-slate-400 text-center mt-2">
-            Login using Email OTP
+            Login using  Email & Password
           </p>
 
-           <p className={`${message == "OTP Verified Successfully" || "OTP Sent Successfully" ? "text-green-500" : "text-red-600"} text-center mt-4 `}>
-            {message}
+          <p
+          className={`${message === "Login Successful"? "text-green-500": "text-red-600"} text-center mt-4`}>{message}
           </p>
 
           <div className="mt-8 space-y-5">
@@ -96,10 +102,12 @@ export default function Login() {
               <input
                 type="email"
                 placeholder="Enter email"
-                value={email}
-                  readOnly={message === "OTP Sent Successfully"}
+                value={userData.email}
                 onChange={(e) =>
-                  setEmail(e.target.value)
+                    setUserData({
+                        ...userData,
+                        email: e.target.value,
+                    })
                 }
                 className={`
                  ${message === "OTP Sent Successfully" ? "opacity-70 ": ""}
@@ -117,7 +125,37 @@ export default function Login() {
               />
             </div>
 
-            {!otpSent ? (
+            <div>
+            <label className="block text-slate-300 mb-2">
+              Password
+            </label>
+
+            <input
+              type="password"
+              placeholder="Enter password"
+              value={userData.password}
+              onChange={(e) =>
+                setUserData({
+                  ...userData,
+                  password: e.target.value,
+                })
+              }
+              className="
+                w-full
+                bg-slate-800
+                border
+                border-slate-700
+                text-white
+                rounded-xl
+                px-4
+                py-3
+                focus:outline-none
+                focus:border-indigo-500
+              "
+            />
+          </div>
+
+            {/* {!otpSent ? (
               <button
                 onClick={sendOtp}
                 className="
@@ -163,10 +201,10 @@ export default function Login() {
                       focus:border-green-500
                     "
                   />
-                </div>
+                </div> */}
 
                 <button
-                  onClick={verifyOtp}
+                  onClick={login}
                   className="
                     w-full
                     bg-green-600
@@ -178,10 +216,10 @@ export default function Login() {
                     transition-all
                   "
                 >
-                  Verify OTP
+                  login
                 </button>
-              </>
-            )}
+              {/* </> */}
+            {/* )} */}
 
           </div>
 
